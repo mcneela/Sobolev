@@ -5,20 +5,20 @@ from model import SobolevNetwork
 
 INPUT_DIM = 2
 OUTPUT_DIM = 1
-NUM_SAMPLES = 1024
+NUM_SAMPLES = 10000
 NUM_HIDDEN = 256
 NUM_EPOCHS = 10
 
 X = tf.placeholder(tf.float32, shape=[None, INPUT_DIM])
 y = tf.placeholder(tf.float32, shape=[None])
-y_der = tf.placeholder(tf.float32, shape=[None])
+y_der = tf.placeholder(tf.float32, shape=[None, INPUT_DIM])
 
 model = SobolevNetwork(INPUT_DIM, NUM_HIDDEN)
 
 y_p = model.forward(X)
 dy = tf.gradients(y_p, X)
 
-loss = tf.reduce_mean(tf.pow(y_p - y, 2) + tf.pow(dy - y_der, 2))
+loss = tf.reduce_mean(tf.pow(y_p - y, 2) + tf.reduce_sum(tf.pow(dy - y_der, 2)))
 optim = tf.train.GradientDescentOptimizer(0.05).minimize(loss)
 
 sess = tf.Session()
