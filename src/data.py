@@ -54,11 +54,33 @@ def plotSTFunction():
     for k in range(len(X)):
         z.append(fn(X[k]))
     z = np.array(z).reshape((40, 40))
-    print(z)
 
     fig = plt.figure()
     ax = fig.gca(projection='3d')
+    plt.title('Styblinski-Tang Function')
     surf = ax.plot_surface(x, y, z, cmap=cm.coolwarm)
 
     fig.colorbar(surf, shrink=0.5, aspect=5)
+    plt.show()
+
+def plotSTGrad():
+    x = np.arange(-5, 5, 0.25)
+    y = np.arange(-5, 5, 0.25)
+    x, y = np.meshgrid(x, y)
+    X = []
+    for i in range(len(x)):
+        for j in range(len(x[0])):
+            X.append([x[i][j], y[i][j]])
+    X = np.array(X)
+    z = []
+    grad1 = STDeriv1(d=2)
+    grad2 = STDeriv2(d=2)
+    for k in range(len(X)):
+        z.append([grad1(X[k]), grad2(X[k])])
+    z = np.array(z)
+    z = np.array(z).reshape((40, 40, 2))
+
+    fig = plt.figure()
+    plt.title('Gradient Field of Styblinski-Tang Function')
+    dz = plt.quiver(x, y, z[:, :, 0], z[:, :, 1])
     plt.show()
