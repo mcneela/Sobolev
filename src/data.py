@@ -1,6 +1,8 @@
 import random
 import matplotlib.pyplot as plt
 import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
 
 def STFunction(d=2):
     def f(x):
@@ -13,28 +15,15 @@ def STFunction(d=2):
 
 def STDeriv1(d=2):
     def f(x):
-        val = 0
-        for j in range(d):
-            if j == 0: 
-                val += 4 * x[j] ** 3 - 32 * x[j] + 5
-            else:
-                val += x[j] ** 4 - 16 * x[j] ** 2 + 5 * x[j]
-        val *= 0.5
+        val = 0.5 * (4 * x[0] ** 3 - 32 * x[0] + 5)
         return val
     return f
 
 def STDeriv2(d=2):
     def f(x):
-        val = 0
-        for j in range(d):
-            if j == 1: 
-                val += 4 * x[j] ** 3 - 32 * x[j] + 5
-            else:
-                val += x[j] ** 4 - 16 * x[j] ** 2 + 5 * x[j]
-        val *= 0.5
+        val = 0.5 * (4 * x[1] ** 3 - 32 * x[1] + 5)
         return val
     return f
-
 
 def genTrainData(d=2, num_samples=1024):
     fn = STFunction(d=d)
@@ -50,3 +39,26 @@ def genTrainData(d=2, num_samples=1024):
         s = (x, y, dy)
         samples.append(s)
     return samples
+
+def plotSTFunction():
+    x = np.arange(-5, 5, 0.25)
+    y = np.arange(-5, 5, 0.25)
+    x, y = np.meshgrid(x, y)
+    X = []
+    for i in range(len(x)):
+        for j in range(len(x[0])):
+            X.append([x[i][j], y[i][j]])
+    X = np.array(X)
+    z = []
+    fn = STFunction(d=2)
+    for k in range(len(X)):
+        z.append(fn(X[k]))
+    z = np.array(z).reshape((40, 40))
+    print(z)
+
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    surf = ax.plot_surface(x, y, z, cmap=cm.coolwarm)
+
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+    plt.show()
