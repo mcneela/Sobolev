@@ -31,7 +31,7 @@ def genTrainData(d=2, num_samples=1024):
     fnd2 = STDeriv2(d=d)
     samples = []
     for n in range(num_samples):
-        x = np.array([random.randint(-5, 5) for i in range(d)])
+        x = np.array([random.randint(-5, 5) * np.random.uniform() for i in range(d)])
         y = fn(x)
         dy1 = fnd1(x)
         dy2 = fnd2(x)
